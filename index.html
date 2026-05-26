@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Настини Сласти — Авторские торты от Анастасии</title>
+<title>Настины Сласти — Авторские торты от Анастасии Кудрявцевой</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -637,8 +637,8 @@
 
 <!-- NAV -->
 <nav id="navbar">
-  <a class="nav-logo" href="#">Настини Сласти</a>
-  <ul class="nav-links">
+  <a class="nav-logo" href="#">Настины Сласти</a>
+  <ul class Кудрявцевой="nav-links">
     <li><a href="#about">О кондитере</a></li>
     <li><a href="#gallery">Портфолио</a></li>
     <li><a href="#process">Как работаем</a></li>
@@ -769,9 +769,9 @@
       </a>
       <a class="social-link" href="https://t.me/nastini_slasti1" target="_blank">
         <span class="icon tg-icon">📢</span>
-        Канал: Настини Сласти
+        Канал: Настины Сласти
       </a>
-      <a class="social-link" href="https://vk.ru/club228348648" target="_blank">
+      <a class Кудрявцевой="social-link" href="https://vk.ru/club228348648" target="_blank">
         <span class="icon vk-icon">🔵</span>
         ВКонтакте: группа
       </a>
@@ -821,8 +821,8 @@
 
 <!-- FOOTER -->
 <footer>
-  <span class="footer-logo">Настини Сласти</span>
-  <span>Авторские торты от Анастасии — с любовью 🍰</span>
+  <span class="footer-logo">Настины Сласти</span>
+  <span>Авторские Кудрявцевой торты от Анастасии — с любовью 🍰</span>
   <div style="display:flex;gap:16px">
     <a href="https://t.me/nastini_slasti1" target="_blank">Telegram</a>
     <a href="https://vk.ru/club228348648" target="_blank">ВКонтакте</a>
@@ -910,16 +910,47 @@ document.getElementById('burger').addEventListener('click', () => {
 });
 
 // Form
-function handleFormSubmit() {
+async function handleFormSubmit() {
   const btn = document.querySelector('.form-submit');
-  btn.textContent = '✓ Заявка отправлена!';
-  btn.style.background = '#6a9e7a';
+
+  const inputs = document.querySelectorAll('input');
+
+  const data = {
+    name: inputs[0].value,
+    contact: inputs[1].value,
+    type: document.querySelector('select').value,
+    message: document.querySelector('textarea').value
+  };
+
+  try {
+    btn.disabled = true;
+    btn.textContent = 'Отправка...';
+
+    const response = await fetch('/.netlify/functions/telegram', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error('Ошибка отправки');
+    }
+
+    btn.textContent = '✓ Заявка отправлена!';
+    btn.style.background = '#6a9e7a';
+
+  } catch (e) {
+    btn.textContent = 'Ошибка отправки';
+    btn.style.background = '#b94a48';
+  }
+
   setTimeout(() => {
+    btn.disabled = false;
     btn.textContent = 'Отправить заявку →';
     btn.style.background = '';
   }, 3000);
-  // Open Telegram
-  window.open('https://t.me/angela_467', '_blank');
 }
 </script>
 </body>
