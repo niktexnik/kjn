@@ -1104,23 +1104,43 @@
     async function handleFormSubmit() {
       const btn = document.querySelector('.form-submit');
 
-      const data = {
-        name: document.querySelector('input').value,
-        contact: document.querySelectorAll('input')[1].value,
-        type: document.querySelector('select').value,
-        message: document.querySelector('textarea').value
-      };
+      const name = document.querySelectorAll('input')[0].value;
+      const contact = document.querySelectorAll('input')[1].value;
+      const type = document.querySelector('select').value;
+      const message = document.querySelector('textarea').value;
+
+      const text = `
+        🎂 Новая заявка
+
+        👤 Имя: ${name}
+        📱 Контакт: ${contact}
+        🍰 Тип: ${type}
+
+        💬 Пожелания:
+        ${message}
+        `;
+
+      const BOT_TOKEN = "1805801654:AAFzamsFKtlOqXB5KkFHuBa-ekxnSdaLxa0";
+      const CHAT_ID = "739889656";
 
       try {
-        await fetch('/send.php', {
+        btn.disabled = true;
+        btn.textContent = 'Отправка...';
+
+        const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text
+          })
         });
 
-        btn.textContent = '✓ Заявка отправлена!';
+        if (!res.ok) throw new Error('Telegram error');
+
+        btn.textContent = '✓ Отправлено!';
         btn.style.background = '#6a9e7a';
 
       } catch (e) {
@@ -1129,6 +1149,7 @@
       }
 
       setTimeout(() => {
+        btn.disabled = false;
         btn.textContent = 'Отправить заявку →';
         btn.style.background = '';
       }, 3000);
